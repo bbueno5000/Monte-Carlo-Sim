@@ -1,0 +1,5 @@
+certifi==2019.11.28
+pip==20.0.2
+setuptools==45.2.0.post20200210
+wheel==0.34.2
+wincertstore==0.2
