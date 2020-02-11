@@ -19,7 +19,8 @@ def simple_bettor(bankroll, initial_wager, wager_count):
             bankroll += wager
         else:
             bankroll -= wager
-        print('Bankroll:' + str(bankroll))
+    return bankroll
 
 if __name__ == '__main__':
-    simple_bettor(10000, 100, 100)
+    for _ in range(100):
+        print('Bankroll:' + str(simple_bettor(10000, 100, 100)))
