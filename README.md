@@ -8,3 +8,5 @@
 4. [Monte Carlo Simulation and Python 4 - Plotting with Matplotlib](https://www.youtube.com/watch?v=jeVZP5vgEC4)
 5. [Monte Carlo Simulation and Python 5 - Martingale Strategy](https://www.youtube.com/watch?v=ApGBEOK-jng)
 6. [Monte Carlo Simulation and Python 6 - Bettor Statistics](https://www.youtube.com/watch?v=nrkT06sVojE)
+7. [Monte Carlo Simulation and Python 7 - More comparison](https://www.youtube.com/watch?v=S0MNZIp6b4g)
+8. [Monte Carlo Simulation and Python 8 - Graphing Results](https://www.youtube.com/watch?v=EIAa-wVazf0)

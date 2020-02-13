@@ -4,7 +4,10 @@ DOCSTRING
 import random
 from matplotlib import pyplot
 
-NUM_BETTORS = 1000
+BANKROLL = 1000
+NUM_WAGERS = 1000
+WAGER_SIZE = 100
+SAMPLE_SIZE = 100
 
 class MonteCarloSimulation:
     """
@@ -45,7 +48,7 @@ class MonteCarloSimulation:
                         break
             wagers.append(count)
             values.append(value)
-        pyplot.plot(wagers, values)
+        pyplot.plot(wagers, values, 'c')
         return broke_count
 
     def roll_dice(self):
@@ -69,26 +72,21 @@ class MonteCarloSimulation:
                     break
             wagers.append(count)
             values.append(value)
-        pyplot.plot(wagers, values)
+        pyplot.plot(wagers, values, 'k')
         return broke_count
 
 if __name__ == '__main__':
-    for _ in range(NUM_BETTORS):
-        broke_count = MonteCarloSimulation().simple_bettor(10000, 100, 100)
-    DEATH_RATE = (broke_count/float(NUM_BETTORS))*100
+    for _ in range(SAMPLE_SIZE):
+        broke_count_a = MonteCarloSimulation().simple_bettor(BANKROLL, WAGER_SIZE, NUM_WAGERS)
+        broke_count_b = MonteCarloSimulation().martingale_bettor(BANKROLL, WAGER_SIZE, NUM_WAGERS)
+    DEATH_RATE = (broke_count_a/float(SAMPLE_SIZE))*100
     SURVIVAL_RATE = 100-DEATH_RATE
-    print('Death Rate:' + str(DEATH_RATE))
-    print('Survival Rate:' + str(SURVIVAL_RATE))
-    pyplot.ylabel('Account Value')
-    pyplot.xlabel('Wager Count')
-    pyplot.axhline(0, color='r')
-    pyplot.show()
-    for _ in range(NUM_BETTORS):
-        broke_count = MonteCarloSimulation().martingale_bettor(10000, 100, 100)
-    DEATH_RATE = (broke_count/float(NUM_BETTORS))*100
+    print('Death Rate:Simple:' + str(DEATH_RATE))
+    print('Survival Rate:Simple:' + str(SURVIVAL_RATE))
+    DEATH_RATE = (broke_count_b/float(SAMPLE_SIZE))*100
     SURVIVAL_RATE = 100-DEATH_RATE
-    print('Death Rate:' + str(DEATH_RATE))
-    print('Survival Rate:' + str(SURVIVAL_RATE))
+    print('Death Rate:Martingale:' + str(DEATH_RATE))
+    print('Survival Rate:Martingale:' + str(SURVIVAL_RATE))
     pyplot.ylabel('Account Value')
     pyplot.xlabel('Wager Count')
     pyplot.axhline(0, color='r')
