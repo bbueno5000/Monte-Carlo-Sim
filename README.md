@@ -10,3 +10,4 @@
 6. [Monte Carlo Simulation and Python 6 - Bettor Statistics](https://www.youtube.com/watch?v=nrkT06sVojE)
 7. [Monte Carlo Simulation and Python 7 - More comparison](https://www.youtube.com/watch?v=S0MNZIp6b4g)
 8. [Monte Carlo Simulation and Python 8 - Graphing Results](https://www.youtube.com/watch?v=EIAa-wVazf0)
+9. [Monte Carlo Simulation and Python 9 Fixing Debt Issues](https://www.youtube.com/watch?v=zJah4cVDNfs)
