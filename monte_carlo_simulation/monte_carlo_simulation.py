@@ -17,7 +17,8 @@ class MonteCarloSimulation:
         """
         DOCSTRING
         """
-        broke_count, value, current_wager = 0, bankroll, initial_wager
+        current_wager, value = initial_wager, bankroll
+        broke_count, profits = 0, 0
         values, wagers = [], []
         previous_wager_won = True
         previous_wager = initial_wager
@@ -53,7 +54,9 @@ class MonteCarloSimulation:
             wagers.append(count)
             values.append(value)
         pyplot.plot(wagers, values, color)
-        return broke_count
+        if value > bankroll:
+            profits += 1
+        return broke_count, profits
 
     def roll_dice(self):
         """
@@ -65,32 +68,47 @@ class MonteCarloSimulation:
         """
         DOCSTRING
         """
-        broke_count, value, values, wagers = 0, bankroll, [], []
+        current_wager, value = initial_wager, bankroll
+        broke_count, profits = 0, 0
+        values, wagers = [], []
         for count in range(1, wager_count):
             if self.roll_dice():
-                value += initial_wager
+                value += current_wager
             else:
-                value -= initial_wager
-                if value < 0:
+                value -= current_wager
+                if value <= 0:
                     broke_count += 1
                     break
             wagers.append(count)
             values.append(value)
         pyplot.plot(wagers, values, color)
-        return broke_count
+        if value > bankroll:
+            value = 0
+            profits += 1
+        return broke_count, profits
 
 if __name__ == '__main__':
+    # simple bettor
     for _ in range(SAMPLE_SIZE):
-        broke_count_a = MonteCarloSimulation().simple_bettor(BANKROLL, WAGER_SIZE, NUM_WAGERS, 'k')
-        broke_count_b = MonteCarloSimulation().martingale_bettor(BANKROLL, WAGER_SIZE, NUM_WAGERS, 'c')
+        broke_count_a, profits_a = MonteCarloSimulation().simple_bettor(
+            BANKROLL, WAGER_SIZE, NUM_WAGERS, 'k')
     DEATH_RATE = (broke_count_a/float(SAMPLE_SIZE))*100
-    SURVIVAL_RATE = 100-DEATH_RATE
     print('Death Rate:Simple:' + str(DEATH_RATE))
-    print('Survival Rate:Simple:' + str(SURVIVAL_RATE))
-    DEATH_RATE = (broke_count_b/float(SAMPLE_SIZE))*100
     SURVIVAL_RATE = 100-DEATH_RATE
+    print('Survival Rate:Simple:' + str(SURVIVAL_RATE))
+    PROFIT_CHANCE = (profits_a/float(SAMPLE_SIZE))*100
+    print('Profit Chance:Simple:' + str(PROFIT_CHANCE))
+    # martingale bettor
+    for _ in range(SAMPLE_SIZE):
+        broke_count_b, profits_b = MonteCarloSimulation().martingale_bettor(
+            BANKROLL, WAGER_SIZE, NUM_WAGERS, 'c')
+    DEATH_RATE = (broke_count_b/float(SAMPLE_SIZE))*100
     print('Death Rate:Martingale:' + str(DEATH_RATE))
+    SURVIVAL_RATE = 100-DEATH_RATE
     print('Survival Rate:Martingale:' + str(SURVIVAL_RATE))
+    PROFIT_CHANCE = (profits_b/float(SAMPLE_SIZE))*100
+    print('Profit Chance:Simple:' + str(PROFIT_CHANCE))
+    # graph
     pyplot.ylabel('Account Value')
     pyplot.xlabel('Wager Count')
     pyplot.axhline(0, color='r')

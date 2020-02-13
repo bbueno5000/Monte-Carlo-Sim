@@ -11,3 +11,4 @@
 7. [Monte Carlo Simulation and Python 7 - More comparison](https://www.youtube.com/watch?v=S0MNZIp6b4g)
 8. [Monte Carlo Simulation and Python 8 - Graphing Results](https://www.youtube.com/watch?v=EIAa-wVazf0)
 9. [Monte Carlo Simulation and Python 9 Fixing Debt Issues](https://www.youtube.com/watch?v=zJah4cVDNfs)
+10. [Monte Carlo Simulation and Python 10 -Analyzing some results](https://www.youtube.com/watch?v=3vDLkSqZYhs)
