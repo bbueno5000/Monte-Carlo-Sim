@@ -13,3 +13,4 @@
 9. [Monte Carlo Simulation and Python 9 Fixing Debt Issues](https://www.youtube.com/watch?v=zJah4cVDNfs)
 10. [Monte Carlo Simulation and Python 10 -Analyzing some results](https://www.youtube.com/watch?v=3vDLkSqZYhs)
 11. [Monte Carlo Simulation and Python 11 - Using Monte Carlo to find best multiple](https://www.youtube.com/watch?v=48QPYiI1iXo)
+12. [Monte Carlo Simulation and Python 13 - D'Alembert Strategy](https://www.youtube.com/watch?v=w43uNAaF1hU)
