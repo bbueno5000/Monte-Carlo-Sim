@@ -4,18 +4,18 @@ DOCSTRING
 import random
 from matplotlib import pyplot
 
-INITIAL_BANKROLL = 1000
-HIGHER_PROFIT = 63.208
-LOWER_BUST = 31.235
-NUM_WAGERS = 1000
-WAGER_SIZE = 100
+BUST_FLOOR = 31.235
+INITIAL_BANKROLL = 10000
+NUM_WAGERS = 10000
+PROFIT_CEILING = 63.208
 SAMPLE_SIZE = 100
+WAGER_SIZE = 100
 
 class MonteCarloSimulation:
     """
     DOCSTRING
     """
-    def __init__(self, initial_bankroll, initial_wager):
+    def __init__(self, initial_bankroll, initial_wager, wager_count):
         """
         DOCSTRING
         """
@@ -28,18 +28,19 @@ class MonteCarloSimulation:
         self.previous_wager = initial_wager
         self.previous_wager_won = True
         self.profits = 0
+        self.wager_count = wager_count
         self.wagers = []
 
-    def alembert_bettor(self, wager_count):
+    def alembert_bettor(self):
         """
         DOCSTRING
         """
-        for _ in range(1, wager_count):
+        for _ in range(self.wager_count):
             if self.previous_wager_won:
                 if self.current_wager == self.initial_wager:
                     pass
                 else:
-                    self.current_wager -=  self.initial_wager
+                    self.current_wager -= self.initial_wager
                 if self.roll_dice():
                     self.current_bankroll += self.current_wager
                     self.previous_wager = self.current_wager
@@ -68,36 +69,42 @@ class MonteCarloSimulation:
             self.profits += 1
         return self.busts, self.profits
 
-    def martingale_bettor(self, wager_count, color):
+    def coin_toss(self):
         """
         DOCSTRING
         """
-        for count in range(1, wager_count):
+        return bool(random.randint(1, 100) <= 50)
+
+    def martingale_bettor(self, color):
+        """
+        DOCSTRING
+        """
+        for count in range(self.wager_count):
             if self.previous_wager_won:
                 if self.roll_dice():
                     self.current_bankroll += self.current_wager
                 else:
                     self.current_bankroll -= self.current_wager
                     self.previous_wager_won = False
-                    previous_wager = self.current_wager
+                    self.previous_wager = self.current_wager
                     if self.current_bankroll <= 0:
                         self.busts += 1
                         break
             else:
                 if self.roll_dice():
-                    self.current_wager = previous_wager*2
+                    self.current_wager = self.previous_wager*2
                     if (self.current_bankroll-self.current_wager) < 0:
                         self.current_wager = self.current_bankroll
                     self.current_bankroll += self.current_wager
                     self.current_wager = self.initial_wager
                     self.previous_wager_won = True
                 else:
-                    self.current_wager = previous_wager*2
+                    self.current_wager = self.previous_wager*2
                     if (self.current_bankroll-self.current_wager) < 0:
                         self.current_wager = self.current_bankroll
                     self.current_bankroll -= self.current_wager
                     self.previous_wager_won = False
-                    previous_wager = self.current_wager
+                    self.previous_wager = self.current_wager
                     if self.current_bankroll <= 0:
                         self.busts += 1
                         break
@@ -108,36 +115,36 @@ class MonteCarloSimulation:
             self.profits += 1
         return self.busts, self.profits
 
-    def multiple_bettor(self, wager_count, random_multiple):
+    def multiple_bettor(self, random_multiple):
         """
         DOCSTRING
         """
-        for count in range(1, wager_count):
+        for count in range(self.wager_count):
             if self.previous_wager_won:
                 if self.roll_dice():
                     self.current_bankroll += self.current_wager
                 else:
                     self.current_bankroll -= self.current_wager
                     self.previous_wager_won = False
-                    previous_wager = self.current_wager
+                    self.previous_wager = self.current_wager
                     if self.current_bankroll <= 0:
                         self.busts += 1
                         break
             else:
                 if self.roll_dice():
-                    self.current_wager = previous_wager*random_multiple
+                    self.current_wager = self.previous_wager*random_multiple
                     if (self.current_bankroll-self.current_wager) < 0:
                         self.current_wager = self.current_bankroll
                     self.current_bankroll += self.current_wager
                     self.current_wager = self.initial_wager
                     self.previous_wager_won = True
                 else:
-                    self.current_wager = previous_wager*random_multiple
+                    self.current_wager = self.previous_wager*random_multiple
                     if (self.current_bankroll-self.current_wager) < 0:
                         self.current_wager = self.current_bankroll
                     self.current_bankroll -= self.current_wager
                     self.previous_wager_won = False
-                    previous_wager = self.current_wager
+                    self.previous_wager = self.current_wager
                     if self.current_bankroll <= 0:
                         self.busts += 1
                         break
@@ -154,11 +161,11 @@ class MonteCarloSimulation:
         """
         return bool(100 > random.randint(1, 100) > 50)
 
-    def simple_bettor(self, wager_count, color):
+    def simple_bettor(self, color):
         """
         DOCSTRING
         """
-        for count in range(1, wager_count):
+        for count in range(self.wager_count):
             if self.roll_dice():
                 self.current_bankroll += self.current_wager
             else:
@@ -175,50 +182,61 @@ class MonteCarloSimulation:
         return self.busts, self.profits
 
 if __name__ == '__main__':
+    BUSTS = []
     MODEL_NAMES = ['simple', 'martingale', 'multiple', 'alembert']
-    BROKE_COUNTS = []
     PROFITS = []
+    TOTAL_BUSTS = 0
+    TOTAL_PROFITS = 0
     # simple bettor
     for _ in range(SAMPLE_SIZE):
-        busts, profit = MonteCarloSimulation(
-            INITIAL_BANKROLL, WAGER_SIZE).simple_bettor(NUM_WAGERS, 'k')
-        BROKE_COUNTS.append(busts)
-        PROFITS.append(profit)
+        busts, profits = MonteCarloSimulation(
+            INITIAL_BANKROLL, WAGER_SIZE, NUM_WAGERS).simple_bettor('k')
+        TOTAL_BUSTS += busts
+        TOTAL_PROFITS += profits
+    BUSTS.append(busts)
+    PROFITS.append(profits)
     # martingale bettor
     for _ in range(SAMPLE_SIZE):
-        busts, profit = MonteCarloSimulation(
-            INITIAL_BANKROLL, WAGER_SIZE).martingale_bettor(NUM_WAGERS, 'c')
-        BROKE_COUNTS.append(busts)
-        PROFITS.append(profit)
+        busts, profits = MonteCarloSimulation(
+            INITIAL_BANKROLL, WAGER_SIZE, NUM_WAGERS).martingale_bettor('c')
+        TOTAL_BUSTS += busts
+        TOTAL_PROFITS += profits
+    BUSTS.append(busts)
+    PROFITS.append(profits)
     # multiple bettor
     for _ in range(SAMPLE_SIZE):
         RANDOM_MULTIPLE = random.uniform(0.1, 10.0)
-        busts, profit = MonteCarloSimulation(
-            INITIAL_BANKROLL, WAGER_SIZE).multiple_bettor(NUM_WAGERS, RANDOM_MULTIPLE)
+        busts, profits = MonteCarloSimulation(
+            INITIAL_BANKROLL, WAGER_SIZE, NUM_WAGERS).multiple_bettor(RANDOM_MULTIPLE)
         BUST_RATE = (busts/SAMPLE_SIZE)*100.00
-        PROFIT_RATE = (profit/SAMPLE_SIZE)*100.00
-        if BUST_RATE < LOWER_BUST:
-            if PROFIT_RATE > HIGHER_PROFIT:
+        PROFIT_RATE = (profits/SAMPLE_SIZE)*100.00
+        if BUST_RATE < BUST_FLOOR:
+            if PROFIT_RATE > PROFIT_CEILING:
                 print('#############################')
                 print('Found Winner:' + str(RANDOM_MULTIPLE))
-                print('Lower Bust:' + str(LOWER_BUST))
-                print('Higher Profit:' + str(HIGHER_PROFIT))
+                print('Lower Bust:' + str(BUST_FLOOR))
+                print('Higher Profit:' + str(PROFIT_CEILING))
                 print('Bust Rate:' + str(BUST_RATE))
                 print('Profit Rate:' + str(PROFIT_RATE))
                 print('#############################')
-        BROKE_COUNTS.append(busts)
-        PROFITS.append(profit)
+        TOTAL_BUSTS += busts
+        TOTAL_PROFITS += profits
+    BUSTS.append(busts)
+    PROFITS.append(profits)
     # alembert bettor
     for _ in range(SAMPLE_SIZE):
-        busts, profit = MonteCarloSimulation(
-            INITIAL_BANKROLL, WAGER_SIZE).alembert_bettor(NUM_WAGERS)
-        BROKE_COUNTS.append(busts)
-        PROFITS.append(profit)
+        busts, profits = MonteCarloSimulation(
+            INITIAL_BANKROLL, WAGER_SIZE, NUM_WAGERS).alembert_bettor()
+        TOTAL_BUSTS += busts
+        TOTAL_PROFITS += profits
+    BUSTS.append(busts)
+    PROFITS.append(profits)
     # statistics
     for count_outer, element in enumerate(MODEL_NAMES):
-        DEATH_RATE = (BROKE_COUNTS[count_outer]/float(SAMPLE_SIZE))*100
+        DEATH_RATE = (BUSTS[count_outer]/float(SAMPLE_SIZE))*100
         SURVIVAL_RATE = 100-DEATH_RATE
         PROFIT_CHANCE = (PROFITS[count_outer]/float(SAMPLE_SIZE))*100
+        print('#############################')
         print('Death Rate:' + MODEL_NAMES[count_outer] + ':' + str(DEATH_RATE))
         print('Survival Rate:' + MODEL_NAMES[count_outer] + ':' + str(SURVIVAL_RATE))
         print('Profit Chance:' + MODEL_NAMES[count_outer] + ':' + str(PROFIT_CHANCE))
