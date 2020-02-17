@@ -6,10 +6,8 @@ from matplotlib import pyplot
 
 BUST_FLOOR = 31.235
 INITIAL_BANKROLL = 10000
-NUM_WAGERS = 10000
 PROFIT_CEILING = 63.208
 SAMPLE_SIZE = 100
-WAGER_SIZE = 100
 
 class MonteCarloSimulation:
     """
@@ -184,25 +182,27 @@ class MonteCarloSimulation:
 if __name__ == '__main__':
     BUSTS = []
     MODEL_NAMES = ['simple', 'martingale', 'multiple', 'alembert']
+    NUM_WAGERS = int(random.uniform(10, 10000))
     PROFITS = []
     TOTAL_BUSTS = 0
     TOTAL_PROFITS = 0
+    WAGER_SIZE = int(random.uniform(1, 1000))
     # simple bettor
     for _ in range(SAMPLE_SIZE):
         busts, profits = MonteCarloSimulation(
             INITIAL_BANKROLL, WAGER_SIZE, NUM_WAGERS).simple_bettor('k')
         TOTAL_BUSTS += busts
         TOTAL_PROFITS += profits
-    BUSTS.append(busts)
-    PROFITS.append(profits)
+    BUSTS.append(TOTAL_BUSTS)
+    PROFITS.append(TOTAL_PROFITS)
     # martingale bettor
     for _ in range(SAMPLE_SIZE):
         busts, profits = MonteCarloSimulation(
             INITIAL_BANKROLL, WAGER_SIZE, NUM_WAGERS).martingale_bettor('c')
         TOTAL_BUSTS += busts
         TOTAL_PROFITS += profits
-    BUSTS.append(busts)
-    PROFITS.append(profits)
+    BUSTS.append(TOTAL_BUSTS)
+    PROFITS.append(TOTAL_PROFITS)
     # multiple bettor
     for _ in range(SAMPLE_SIZE):
         RANDOM_MULTIPLE = random.uniform(0.1, 10.0)
@@ -221,16 +221,16 @@ if __name__ == '__main__':
                 print('#############################')
         TOTAL_BUSTS += busts
         TOTAL_PROFITS += profits
-    BUSTS.append(busts)
-    PROFITS.append(profits)
+    BUSTS.append(TOTAL_BUSTS)
+    PROFITS.append(TOTAL_PROFITS)
     # alembert bettor
     for _ in range(SAMPLE_SIZE):
         busts, profits = MonteCarloSimulation(
             INITIAL_BANKROLL, WAGER_SIZE, NUM_WAGERS).alembert_bettor()
         TOTAL_BUSTS += busts
         TOTAL_PROFITS += profits
-    BUSTS.append(busts)
-    PROFITS.append(profits)
+    BUSTS.append(TOTAL_BUSTS)
+    PROFITS.append(TOTAL_PROFITS)
     # statistics
     for count_outer, element in enumerate(MODEL_NAMES):
         DEATH_RATE = (BUSTS[count_outer]/float(SAMPLE_SIZE))*100
