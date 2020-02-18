@@ -1,6 +1,7 @@
 """
 DOCSTRING
 """
+import csv
 import random
 from matplotlib import pyplot
 
@@ -72,6 +73,20 @@ class MonteCarloSimulation:
         DOCSTRING
         """
         return bool(random.randint(1, 100) <= 50)
+
+    def graph_data(self):
+        """
+        DOCTRING
+        """
+        with open('monte_carlo.csv', 'r') as file:
+            data = csv.reader(file, delimiter=',')
+            for line in data:
+                percent_roi = float(line[0])
+                wager_size_percent = float(line[1])
+                wager_count = float(line[2])
+                plot_color = line[3]
+                pyplot.scatter(wager_size_percent, wager_count, color=plot_color)
+            pyplot.show()
 
     def martingale_bettor(self, color):
         """

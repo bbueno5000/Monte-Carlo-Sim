@@ -18,3 +18,6 @@
 14. [Monte Carlo Simulation and Python 14 - 50/50 odds](https://www.youtube.com/watch?v=QGu5hUarTik)
 15. [Monte Carlo Simulation and Python 15 - Analysis of D'Alembert](https://www.youtube.com/watch?v=SwSvVv0IO2E)
 16. [Monte Carlo Simulation and Python 16 - Comparing profitability](https://www.youtube.com/watch?v=u9mgSk9-IOY)
+17. [Monte Carlo Simulation and Python 17 - Using Monte Carlo to find best D'Alembert Increment](https://www.youtube.com/watch?v=UCp5tcUMdks)
+18. [Monte Carlo Simulation and Python 18 - 2D charting monte carlo variables](https://www.youtube.com/watch?v=p3WLN1-SohU)
+19. [Monte Carlo Simulation and Python](https://www.youtube.com/watch?v=uY3ZHfnFjJc)
